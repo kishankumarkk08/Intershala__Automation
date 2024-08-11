@@ -1,11 +1,11 @@
 const p = require("puppeteer");
 const stealthlugin = require("puppeteer-extra-plugin-stealth")
-let { myEmail, myPass } = require("./secret");
-let data = require("./data");
+let { myEmail, myPass } = require("./login");
+let data = require("./desc");
 let page;
 
 //Using the puppeteer-extra-plugin-stealth
-p.use(stealthlugin());
+// p.use(stealthlugin());
 
 async function automate() {
 
@@ -27,9 +27,9 @@ async function automate() {
 
   //type in to the email and the password field
   await page.waitForSelector("input[type='email']")
-  await page.type("input[type='email']", id, { delay: 100, });
+  await page.type("input[type='email']", myEmail, { delay: 100, });
   await page.waitForSelector("input[type='password']")
-  await page.type("input[type='password']", pass, { delay: 100 });
+  await page.type("input[type='password']", myPass, { delay: 100 });
 
   //click the submit button
   await page.waitForSelector("button[type='submit']");
@@ -53,7 +53,7 @@ async function automate() {
   await new Promise(function (resolve, reject) {
     return setTimeout(resolve, 2000);
   });
-  page.goto("https://internshala.com" + urls[1]);
+  page.goto("https://internshala.com" + urls[3]);
 
   await page.waitForSelector("#graduation-page .ic-16-plus");
   await page.click("#graduation-page .ic-16-plus", { delay: 50 });
@@ -106,14 +106,14 @@ async function graduation(data) {
   //selecting the graduation start year
   await page.waitForSelector("#start_year_chosen", { visible: true });
   await page.click("#start_year_chosen");
-  await page.waitForSelector(".active-result[data-option-array-index='5']", { visible: true });
-  await page.click(".active-result[data-option-array-index='5']");
+  await page.waitForSelector(".active-result[data-option-array-index='3']", { visible: true });
+  await page.click(".active-result[data-option-array-index='3']");
 
   //selecting the graduation end year
   await page.waitForSelector("#end_year_chosen", { visible: true });
   await page.click('#end_year_chosen');
-  await page.waitForSelector("#end_year_chosen .active-result[data-option-array-index = '6']", { visible: true });
-  await page.click("#end_year_chosen .active-result[data-option-array-index = '6']");
+  await page.waitForSelector("#end_year_chosen .active-result[data-option-array-index = '4']", { visible: true });
+  await page.click("#end_year_chosen .active-result[data-option-array-index = '4']");
 
   //selecting the type of degree
   await page.waitForSelector("#degree", { visible: true });
@@ -266,5 +266,5 @@ async function apply(url, data) {
 }
 
 
-//calling the final function
+//main function call
 automate();

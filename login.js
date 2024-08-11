@@ -1,3 +1,3 @@
 let myEmail = "EnterYourEmail";
-let myPass = "EnterYourPass";
+let myPass = "EnterYourPassword";
 module.exports = { myEmail, myPass };
