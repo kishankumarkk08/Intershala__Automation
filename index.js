@@ -1,10 +1,15 @@
 const p = require("puppeteer");
+const stealthlugin = require("puppeteer-extra-plugin-stealth")
 let { myEmail, myPass } = require("./secret");
+let data = require("./data");
 let page;
-let dataFile = require("./data");
+
+//Using the puppeteer-extra-plugin-stealth
+p.use(stealthlugin());
 
 async function automate() {
 
+  //launching the browser
   let browser = await p.launch({
     headless: false,
     defaultViewport: false,
@@ -51,73 +56,82 @@ async function automate() {
   page.goto("https://internshala.com" + urls[1]);
 
   await page.waitForSelector("#graduation-page .ic-16-plus");
-  await page.click("#graduation-page .ic-16-plus");
-  await graduation(dataFile[0]);
+  await page.click("#graduation-page .ic-16-plus", { delay: 50 });
+  await graduation(data[0]);
 
   await new Promise(function (resolve, reject) {
     return setTimeout(resolve, 1000);
   });
 
   await page.waitForSelector(".next-button", { visible: true });
-  await page.click(".next-button");
+  await page.click(".next-button", { delay: 50 });
 
-  await training(dataFile[0]);
+  await training(data[0]);
 
   await new Promise(function (resolve, reject) {
     return setTimeout(resolve, 1000)
   });
 
   await page.waitForSelector(".next-button", { visible: true });
-  await page.click(".next-button");
+  await page.click(".next-button", { delay: 50 });
 
   await page.waitForSelector(".btn.btn-secondary.skip.skip-button", { visible: true });
-  await page.click(".btn.btn-secondary.skip.skip-button");
+  await page.click(".btn.btn-secondary.skip.skip-button", { delay: 50 });
 
-  await workSample(dataFile[0]);
+  await workSample(data[0]);
 
   await new Promise(function (resolve, reject) {
     return setTimeout(resolve, 1000);
   });
 
   await page.waitForSelector("#save_work_samples", { visible: true });
-  await page.click("#save_work_samples");
+  await page.click("#save_work_samples", { delay: 50 });
 
 
   await new Promise(function (resolve, reject) {
     return setTimeout(resolve, 1000);
   });
-  await application(dataFile[0]);
+  await application(data[0]);
 }
 
+//graduation function
 async function graduation(data) {
   await page.waitForSelector("#degree_completion_status_pursuing", { visible: true });
   await page.click("#degree_completion_status_pursuing");
 
+  //type in the name of the college
   await page.waitForSelector("#college", { visible: true });
   await page.type("#college", data["College"]);
 
+  //selecting the graduation start year
   await page.waitForSelector("#start_year_chosen", { visible: true });
   await page.click("#start_year_chosen");
   await page.waitForSelector(".active-result[data-option-array-index='5']", { visible: true });
   await page.click(".active-result[data-option-array-index='5']");
 
+  //selecting the graduation end year
   await page.waitForSelector("#end_year_chosen", { visible: true });
   await page.click('#end_year_chosen');
   await page.waitForSelector("#end_year_chosen .active-result[data-option-array-index = '6']", { visible: true });
   await page.click("#end_year_chosen .active-result[data-option-array-index = '6']");
 
+  //selecting the type of degree
   await page.waitForSelector("#degree", { visible: true });
   await page.type("#degree", data["Degree"]);
 
+  //setting a timeout of 1 sec
   await new Promise(function (resolve, reject) {
     return setTimeout(resolve, 1000);
   });
+
+  //selecting the stream
   await page.waitForSelector("#stream", { visible: true });
   await page.type("#stream", data["Stream"]);
 
   await new Promise(function (resolve, reject) {
     return setTimeout(resolve, 1000);
   });
+
   await page.waitForSelector("#performance-college", { visible: true });
   await page.type("#performance-college", data["Percentage"]);
 
@@ -125,10 +139,12 @@ async function graduation(data) {
     return setTimeout(resolve, 1000);
   });
 
+  //clicking the submit button
   await page.click("#college-submit");
 
 }
 
+//training function
 async function training(data) {
   await page.waitForSelector(".experiences-pages[data-target='#training-modal'] .ic-16-plus", { visible: true });
   await page.click(".experiences-pages[data-target='#training-modal'] .ic-16-plus");
@@ -171,11 +187,14 @@ async function training(data) {
 
 }
 
+//workSample function
+
 async function workSample(data) {
   await page.waitForSelector("#other_portfolio_link", { visible: true });
   await page.type("#other_portfolio_link", data["link"]);
 }
 
+//application function
 async function application(data) {
 
   await page.goto("https://internshala.com/the-grand-summer-internship-fair");
@@ -205,6 +224,8 @@ async function application(data) {
 
 }
 
+
+//apply function
 async function apply(url, data) {
   await page.goto("https://internshala.com" + url);
 
@@ -215,8 +236,9 @@ async function apply(url, data) {
   await page.click("#application_button");
 
   await page.waitForSelector(".textarea.form-control", { visible: true });
-  let ans = await page.$$(".textarea.form-control");
 
+
+  let ans = await page.$$(".textarea.form-control");
   for (let i = 0; i < ans.length; i++) {
     if (i == 0) {
       await ans[i].type(data["hiringReason"]);
@@ -238,8 +260,11 @@ async function apply(url, data) {
     }
   }
 
+  //to click the submit button
   await page.click(".submit_button_container");
 
 }
 
+
+//calling the final function
 automate();
