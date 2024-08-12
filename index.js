@@ -1,11 +1,11 @@
 const p = require("puppeteer");
-const stealthlugin = require("puppeteer-extra-plugin-stealth")
+const stealthPlugin = require("puppeteer-extra-plugin-stealth")
 let { myEmail, myPass } = require("./login");
 let data = require("./desc");
 let page;
 
 //Using the puppeteer-extra-plugin-stealth
-// p.use(stealthlugin());
+//p.use(stealthPlugin());
 
 async function automate() {
 
